@@ -1,7 +1,14 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
 import * as cdk from '@aws-cdk/core';
-import { CdkStack } from '../lib/cdk-stack';
+import { NiFiAppInfrastructureStack } from '../lib/app-infrastructure-stack';
 
 const app = new cdk.App();
-new CdkStack(app, 'CdkStack');
+
+const owner = app.node.tryGetContext("owner");
+const contact = app.node.tryGetContext("contact");
+const networkStackName = app.node.tryGetContext("networkStackName");
+const serviceName = app.node.tryGetContext("serviceName");
+const domainStack = app.node.tryGetContext("domainStack");
+
+const service = new NiFiAppInfrastructureStack(app, 'NifiAppInfrastructure', { owner, contact, networkStackName, serviceName, domainStack });
