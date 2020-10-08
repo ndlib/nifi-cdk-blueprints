@@ -1,12 +1,13 @@
 import codebuild = require('@aws-cdk/aws-codebuild');
 import { Artifact, Pipeline } from '@aws-cdk/aws-codepipeline';
-import { GitHubSourceAction, CodeBuildAction, ManualApprovalAction } from '@aws-cdk/aws-codepipeline-actions';
+import { GitHubSourceAction, CodeBuildAction, ManualApprovalAction, ServiceCatalogDeployAction } from '@aws-cdk/aws-codepipeline-actions';
 import { Construct, Duration, FileSystem, Fn, RemovalPolicy, SecretValue, Stack, StackProps } from '@aws-cdk/core';
 import { Vpc, SecurityGroup } from '@aws-cdk/aws-ec2';
+import { Cluster } from '@aws-cdk/aws-ecs';
 import { PolicyStatement } from '@aws-cdk/aws-iam';
 import { LogGroup, RetentionDays } from '@aws-cdk/aws-logs';
 import { Bucket, BucketAccessControl } from '@aws-cdk/aws-s3';
-import { PrivateDnsNamespace } from '@aws-cdk/aws-servicediscovery';
+import { NamespaceType, PrivateDnsNamespace, Service } from '@aws-cdk/aws-servicediscovery';
 import { Topic } from '@aws-cdk/aws-sns';
 import { ArtifactBucket, HttpsAlb, SlackApproval } from '@ndlib/ndlib-cdk';
 
@@ -70,10 +71,28 @@ export class NiFiAppInfrastructureStack extends Stack {
       removalPolicy: RemovalPolicy.DESTROY,
     });
 
-    this.privateNamespace = new PrivateDnsNamespace(this, `${props.serviceName}-namespace`, {
-      vpc: vpc,
+    // this.privateNamespace = new PrivateDnsNamespace(this, `${props.serviceName}-Namespace`, {
+    //   vpc: vpc,
+    //   name: `${props.serviceName}`,
+    //   description: `Private Namespace for ${props.serviceName}`,
+    // });
+
+    const NiFiCloudMapService = new Service(this, `${props.serviceName}-CloudMap`, {
+      namespace: this.privateNamespace,
       name: `${props.serviceName}`,
-      description: `Private Namespace for ${props.serviceName}`,
+      description: `Cloud Map for ${props.serviceName}`,
+      loadBalancer: true,
+
+    });
+
+    const NiFiContainerCluster = new Cluster(this, `${props.serviceName}-ContainerCluster`, {
+      vpc: vpc,
+      clusterName: this.stackName,
+      defaultCloudMapNamespace: {
+        vpc: vpc,
+        name: `${props.serviceName}`,
+        type: NamespaceType.DNS_PRIVATE,
+      },
     });
 
     const NiFiLoadBalancerSecurityGroup = new SecurityGroup(this, `${props.serviceName}-LoadBalancerSecurityGroup`, {
