@@ -47,13 +47,13 @@ export class NiFiAppInfrastructureStack extends Stack {
       ],
     });
 
-    this.loadBalancer = new HttpsAlb(this, 'NiFiLoadBalancer', {
+    this.loadBalancer = new HttpsAlb(this, `${props.serviceName}-LoadBalancer`, {
       certificateArns: [ Fn.importValue(`${props.domainStack}:ACMCertificateARN`) ],
       vpc: vpc,
       internetFacing: true,
     });
 
-    this.logBucket = new Bucket(this, 'NiFiLogBucket', {
+    this.logBucket = new Bucket(this, `${props.serviceName}-LogBucket`, {
       accessControl: BucketAccessControl.LOG_DELIVERY_WRITE,
       versioned: true,
       removalPolicy: RemovalPolicy.DESTROY,
@@ -64,7 +64,7 @@ export class NiFiAppInfrastructureStack extends Stack {
       }],
     });
 
-    this.logs = new LogGroup(this, 'NiFiSharedLogGroup', {
+    this.logs = new LogGroup(this, `${props.serviceName}-LogGroup`, {
       retention: RetentionDays.ONE_MONTH,
       logGroupName: this.stackName,
       removalPolicy: RemovalPolicy.DESTROY,
@@ -76,11 +76,11 @@ export class NiFiAppInfrastructureStack extends Stack {
       description: `Private Namespace for ${props.serviceName}`,
     });
 
-    const NiFiLoadBalancerSecurityGroup = new SecurityGroup(this, 'NiFiLoadBalancerSecurityGroup', {
+    const NiFiLoadBalancerSecurityGroup = new SecurityGroup(this, `${props.serviceName}-LoadBalancerSecurityGroup`, {
       vpc: vpc,
       allowAllOutbound: true,
       description: 'Access to the public facing load balancer',
-      securityGroupName: this.stackName
+      securityGroupName: this.stackName,
     });
 
   }
