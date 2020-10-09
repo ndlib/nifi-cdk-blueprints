@@ -20,6 +20,10 @@ export class NiFiAppInfrastructureStack extends Stack {
   public readonly vpc: Vpc;
   public readonly logBucket: Bucket;
   public readonly privateNamespace: PrivateDnsNamespace;
+  public readonly cloudMapService: Service;
+  public readonly containerCluster: Cluster;
+  public readonly securityGroup: SecurityGroup;
+
   constructor(scope: Construct, id: string, props: NiFiAppInfrastructureProps) {
     super(scope, id, props);
 
@@ -72,7 +76,7 @@ export class NiFiAppInfrastructureStack extends Stack {
     //   description: `Private Namespace for ${props.serviceName}`,
     // });
 
-    const NiFiCloudMapService = new Service(this, `${props.serviceName}-CloudMap`, {
+    this.cloudMapService = new Service(this, `${props.serviceName}-CloudMap`, {
       namespace: this.privateNamespace,
       name: `${props.serviceName}`,
       description: `Cloud Map for ${props.serviceName}`,
@@ -80,7 +84,7 @@ export class NiFiAppInfrastructureStack extends Stack {
 
     });
 
-    const NiFiContainerCluster = new Cluster(this, `${props.serviceName}-ContainerCluster`, {
+    this.containerCluster = new Cluster(this, `${props.serviceName}-ContainerCluster`, {
       vpc: vpc,
       clusterName: this.stackName,
       defaultCloudMapNamespace: {
@@ -90,7 +94,7 @@ export class NiFiAppInfrastructureStack extends Stack {
       },
     });
 
-    const NiFiLoadBalancerSecurityGroup = new SecurityGroup(this, `${props.serviceName}-LoadBalancerSecurityGroup`, {
+    this.securityGroup = new SecurityGroup(this, `${props.serviceName}-LoadBalancerSecurityGroup`, {
       vpc: vpc,
       allowAllOutbound: true,
       description: 'Access to the public facing load balancer',
