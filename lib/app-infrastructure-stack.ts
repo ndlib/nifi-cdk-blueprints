@@ -11,7 +11,7 @@ export interface NiFiAppInfrastructureProps extends StackProps {
   readonly contact: string;
   readonly networkStackName: string;
   readonly serviceName: string;
-  readonly domainStack: string;
+  readonly domainStackName: string;
 }
 
 export class NiFiAppInfrastructureStack extends Stack {
@@ -44,7 +44,7 @@ export class NiFiAppInfrastructureStack extends Stack {
     });
 
     this.loadBalancer = new HttpsAlb(this, `${props.serviceName}-LoadBalancer`, {
-      certificateArns: [ Fn.importValue(`${props.domainStack}:ACMCertificateARN`) ],
+      certificateArns: [ Fn.importValue(`${props.domainStackName}:ACMCertificateARN`) ],
       vpc: vpc,
       internetFacing: true,
     });
