@@ -3,7 +3,7 @@ import { Vpc, SecurityGroup } from '@aws-cdk/aws-ec2';
 import { Cluster } from '@aws-cdk/aws-ecs';
 import { LogGroup, RetentionDays } from '@aws-cdk/aws-logs';
 import { Bucket, BucketAccessControl } from '@aws-cdk/aws-s3';
-import { NamespaceType, PrivateDnsNamespace, Service } from '@aws-cdk/aws-servicediscovery';
+import { INamespace, NamespaceType, Service } from '@aws-cdk/aws-servicediscovery';
 import { HttpsAlb } from '@ndlib/ndlib-cdk';
 
 export interface NiFiAppInfrastructureProps extends StackProps {
@@ -20,7 +20,7 @@ export class NiFiAppInfrastructureStack extends Stack {
   public readonly logs: LogGroup;
   public readonly vpc: Vpc;
   public readonly logBucket: Bucket;
-  public readonly privateNamespace: PrivateDnsNamespace;
+  public readonly privateNamespace: INamespace;
   public readonly cloudMapService: Service;
   public readonly containerCluster: Cluster;
   public readonly securityGroup: SecurityGroup;
