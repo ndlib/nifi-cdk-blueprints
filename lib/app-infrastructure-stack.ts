@@ -48,6 +48,13 @@ export class NiFiAppInfrastructureStack extends Stack {
       ],
     });
 
+    this.securityGroup = new SecurityGroup(this, `${props.serviceName}-LoadBalancerSecurityGroup`, {
+      vpc: vpc,
+      allowAllOutbound: true,
+      description: 'Access to the public facing load balancer',
+      securityGroupName: this.stackName,
+    });
+
     this.loadBalancer = new HttpsAlb(this, `${props.serviceName}-LoadBalancer`, {
       certificateArns: [ Fn.importValue(`${props.domainStackName}:ACMCertificateARN`) ],
       vpc: vpc,
@@ -94,13 +101,5 @@ export class NiFiAppInfrastructureStack extends Stack {
         type: NamespaceType.DNS_PRIVATE,
       },
     });
-
-    this.securityGroup = new SecurityGroup(this, `${props.serviceName}-LoadBalancerSecurityGroup`, {
-      vpc: vpc,
-      allowAllOutbound: true,
-      description: 'Access to the public facing load balancer',
-      securityGroupName: this.stackName,
-    });
-
   }
 }
