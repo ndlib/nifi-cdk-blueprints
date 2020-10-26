@@ -78,6 +78,10 @@ export class NiFiAppInfrastructureStack extends Stack {
       removalPolicy: RemovalPolicy.DESTROY,
     });
 
+    this.containerCluster = new Cluster(this, `${props.serviceName}-ContainerCluster`, {
+      vpc: vpc,
+      clusterName: this.stackName,
+    });
     this.privateNamespace = this.containerCluster.addDefaultCloudMapNamespace({
       name: `${props.dnsNamespace}`,
       vpc: vpc,
@@ -89,17 +93,6 @@ export class NiFiAppInfrastructureStack extends Stack {
       name: `${props.serviceName}`,
       description: `Cloud Map for ${props.serviceName}`,
       loadBalancer: true,
-
-    });
-
-    this.containerCluster = new Cluster(this, `${props.serviceName}-ContainerCluster`, {
-      vpc: vpc,
-      clusterName: this.stackName,
-      defaultCloudMapNamespace: {
-        vpc: vpc,
-        name: `${props.serviceName}`,
-        type: NamespaceType.DNS_PRIVATE,
-      },
     });
   }
 }
