@@ -12,6 +12,7 @@ export interface NiFiAppInfrastructureProps extends StackProps {
   readonly networkStackName: string;
   readonly serviceName: string;
   readonly domainStackName: string;
+  readonly dnsNamespace: string;
 }
 
 export class NiFiAppInfrastructureStack extends Stack {

@@ -10,5 +10,6 @@ const contact = app.node.tryGetContext("contact");
 const networkStackName = app.node.tryGetContext("networkStackName");
 const serviceName = app.node.tryGetContext("serviceName");
 const domainStackName = app.node.tryGetContext("domainStack");
+const dnsNamespace = app.node.tryGetContext("dnsNamespace");
 
-const service = new NiFiAppInfrastructureStack(app, 'NifiAppInfrastructure', { owner, contact, networkStackName, serviceName, domainStackName });
+const service = new NiFiAppInfrastructureStack(app, 'NifiAppInfrastructure', { owner, contact, networkStackName, serviceName, domainStackName, dnsNamespace });
