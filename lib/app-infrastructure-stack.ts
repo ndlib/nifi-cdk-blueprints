@@ -31,7 +31,7 @@ export class NiFiAppInfrastructureStack extends Stack {
     const owner = props.owner || `see stack: ${this.stackName}`;
     const contact = props.contact || `see stack: ${this.stackName}`;
 
-    const vpcId = Fn.importValue(`${props.networkStackName}:VPCID`)
+    const vpcId = Fn.importValue(`${props.networkStackName}:VPCID`);
     const vpc = Vpc.fromVpcAttributes(this, 'peered-network', {
       vpcId: vpcId,
       availabilityZones: [
