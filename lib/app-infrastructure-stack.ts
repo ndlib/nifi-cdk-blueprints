@@ -78,11 +78,11 @@ export class NiFiAppInfrastructureStack extends Stack {
       removalPolicy: RemovalPolicy.DESTROY,
     });
 
-    // this.privateNamespace = new PrivateDnsNamespace(this, `${props.serviceName}-Namespace`, {
-    //   vpc: vpc,
-    //   name: `${props.serviceName}`,
-    //   description: `Private Namespace for ${props.serviceName}`,
-    // });
+    this.privateNamespace = this.containerCluster.addDefaultCloudMapNamespace({
+      name: `${props.dnsNamespace}`,
+      vpc: vpc,
+      type: NamespaceType.DNS_PRIVATE,
+    });
 
     this.cloudMapService = new Service(this, `${props.serviceName}-CloudMap`, {
       namespace: this.privateNamespace,
