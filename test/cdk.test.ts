@@ -1,11 +1,18 @@
 import { expect as expectCDK, matchTemplate, MatchStyle } from '@aws-cdk/assert';
 import * as cdk from '@aws-cdk/core';
-import * as Cdk from '../lib/cdk-stack';
+import * as Cdk from '../lib/app-infrastructure-stack';
 
 test('Empty Stack', () => {
     const app = new cdk.App();
     // WHEN
-    const stack = new Cdk.CdkStack(app, 'MyTestStack');
+    const stack = new Cdk.NiFiAppInfrastructureStack(app, 'NiFiAppInfrastructureTestStack', {
+      owner: 'Justin Rittenhouse',
+      contact: 'jrittenh@nd.edu',
+      networkStackName: 'peered-network',
+      serviceName: 'nifi',
+      domainStackName: '',
+      dnsNamespace: 'nifi',
+    });
     // THEN
     expectCDK(stack).to(matchTemplate({
       "Resources": {}
