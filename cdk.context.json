@@ -1,0 +1,8 @@
+{
+    "owner": "Justin Rittenhouse",
+    "contact": "jrittenh@nd.edu",
+    "networkStackName": "peered-network",
+    "serviceName": "nifi",
+    "domainStackName": "",
+    "dnsNamespace": "nifi"
+}
