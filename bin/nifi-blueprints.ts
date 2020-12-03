@@ -2,6 +2,8 @@
 import 'source-map-support/register';
 import * as cdk from '@aws-cdk/core';
 import { NiFiAppInfrastructureStack } from '../src/app-infrastructure-stack';
+import * as services from './services';
+import * as pipelines from './pipelines';
 
 const app = new cdk.App();
 
