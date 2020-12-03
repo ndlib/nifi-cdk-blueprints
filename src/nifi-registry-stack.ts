@@ -14,7 +14,7 @@ import { Vpc } from '@aws-cdk/aws-ec2';
 // import { Topic } from '@aws-cdk/aws-sns';
 // import { ArtifactBucket, HttpsAlb, SlackApproval } from '@ndlib/ndlib-cdk';
 
-export interface NiFiCAServiceStackProps extends StackProps {
+export interface NiFiRegistryServiceStackProps extends StackProps {
   readonly networkStackName: string;
   readonly infrastructureStackName: string;
   readonly namespace: string;
@@ -22,8 +22,8 @@ export interface NiFiCAServiceStackProps extends StackProps {
   readonly serviceName: string;
 }
 
-export class NiFiCAServiceStack extends Stack {
-  constructor(scope: Construct, id: string, props: NiFiCAServiceStackProps) {
+export class NiFiRegistryServiceStack extends Stack {
+  constructor(scope: Construct, id: string, props: NiFiRegistryServiceStackProps) {
     super(scope, id, props);
 
     const vpcId = Fn.importValue(`${props.networkStackName}:VPCID`)
@@ -43,12 +43,12 @@ export class NiFiCAServiceStack extends Stack {
       ],
     });
 
-    const task = new TaskDefinition(this, '${props.serviceName}-CA-Task', {
+    const task = new TaskDefinition(this, '${props.serviceName}-Registry-Task', {
       compatibility: Compatibility.FARGATE,
       cpu: '256',
       memoryMiB: '512',
       networkMode: NetworkMode.AWS_VPC,
-      family: `${this.stackName}-CA-Service`,
+      family: `${this.stackName}-Registry-Service`,
     });
 
 
