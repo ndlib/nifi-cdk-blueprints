@@ -1,8 +1,37 @@
 {
+    "environments": {
+        "dev": {
+            "account": "333680067100",
+            "region": "us-east-1",
+            "createDns": false,
+            "domainName": "library.nd.edu",
+            "domainStackName": "library-domain",
+            "networkStackName": "peered-network",
+            "useExistingDnsZone": false,
+            "slackNotifyStackname": "slack-cd-approvals-test-notifier",
+            "createGithubWebhooks": false
+        },
+        "prod": {
+            "account": "230391840102",
+            "region": "us-east-1",
+            "createDns": false,
+            "domainName": "library.nd.edu",
+            "domainStackName": "library-domain",
+            "networkStackName": "peered-network",
+            "useExistingDnsZone": false,
+            "slackNotifyStackname": "nifi-approval-bot-nifi-notifier",
+            "createGithubWebhooks": false
+        }
+    },
+    "env": "dev",
+    "stackType": "service",
     "owner": "Justin Rittenhouse",
     "contact": "jrittenh@nd.edu",
-    "networkStackName": "peered-network",
-    "serviceName": "nifi",
-    "domainStackName": "",
-    "dnsNamespace": "nifi"
+    "projectName": "nifi",
+    "description": "Infrastructure for NiFi services",
+    "oauthTokenPath": "/all/github/ndlib-git",
+    "namespace": "nifi",
+    "infraRepoOwner": "ndlib",
+    "infraRepoName": "nifi-blueprints",
+    "infraSourceBrancH": "main"
 }
