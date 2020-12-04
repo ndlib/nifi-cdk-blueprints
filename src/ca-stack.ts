@@ -4,7 +4,7 @@ import { DockerImageAsset } from '@aws-cdk/aws-ecr-assets';
 import { Cluster, Compatibility, ContainerImage, FargateService, NetworkMode, Secret, TaskDefinition } from '@aws-cdk/aws-ecs';
 import { ApplicationTargetGroup } from '@aws-cdk/aws-elasticloadbalancingv2';
 import { StringParameter } from '@aws-cdk/aws-ssm';
-import { NiFiAppInfrastructureStack } from './app-infrastructure-stack';
+import { FoundationStackProps } from './foundation-stack';
 
 // import codebuild = require('@aws-cdk/aws-codebuild');
 // import { Artifact, Pipeline } from '@aws-cdk/aws-codepipeline';

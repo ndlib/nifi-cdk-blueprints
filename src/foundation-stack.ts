@@ -5,17 +5,13 @@ import { LogGroup, RetentionDays } from '@aws-cdk/aws-logs';
 import { Bucket, BucketAccessControl } from '@aws-cdk/aws-s3';
 import { INamespace, NamespaceType, Service } from '@aws-cdk/aws-servicediscovery';
 import { HttpsAlb } from '@ndlib/ndlib-cdk';
+import { CustomEnvironment } from './custom-environment';
 
-export interface NiFiAppInfrastructureProps extends StackProps {
-  readonly owner: string;
-  readonly contact: string;
-  readonly networkStackName: string;
-  readonly serviceName: string;
-  readonly domainStackName: string;
-  readonly dnsNamespace: string;
+export interface FoundationStackProps extends StackProps {
+  readonly env: CustomEnvironment;
 }
 
-export class NiFiAppInfrastructureStack extends Stack {
+export class FoundationStack extends Stack {
   public readonly loadBalancer: HttpsAlb;
   public readonly logs: LogGroup;
   public readonly vpc: Vpc;
@@ -25,13 +21,10 @@ export class NiFiAppInfrastructureStack extends Stack {
   public readonly containerCluster: Cluster;
   public readonly securityGroup: SecurityGroup;
 
-  constructor(scope: Construct, id: string, props: NiFiAppInfrastructureProps) {
+  constructor(scope: Construct, id: string, props: FoundationStackProps) {
     super(scope, id, props);
 
-    const owner = props.owner || `see stack: ${this.stackName}`;
-    const contact = props.contact || `see stack: ${this.stackName}`;
-
-    const vpcId = Fn.importValue(`${props.networkStackName}:VPCID`);
+    const vpcId = Fn.importValue(`${props.env.networkStackName}:VPCID`);
     const vpc = Vpc.fromVpcAttributes(this, 'peered-network', {
       vpcId: vpcId,
       availabilityZones: [
@@ -39,29 +32,29 @@ export class NiFiAppInfrastructureStack extends Stack {
         Fn.select(1, Fn.getAzs()),
       ],
       publicSubnetIds: [
-        Fn.importValue(`${props.networkStackName}:PublicSubnet1ID`),
-        Fn.importValue(`${props.networkStackName}:PublicSubnet2ID`),
+        Fn.importValue(`${props.env.networkStackName}:PublicSubnet1ID`),
+        Fn.importValue(`${props.env.networkStackName}:PublicSubnet2ID`),
       ],
       privateSubnetIds: [
-        Fn.importValue(`${props.networkStackName}:PrivateSubnet1ID`),
-        Fn.importValue(`${props.networkStackName}:PrivateSubnet2ID`),
+        Fn.importValue(`${props.env.networkStackName}:PrivateSubnet1ID`),
+        Fn.importValue(`${props.env.networkStackName}:PrivateSubnet2ID`),
       ],
     });
 
-    this.securityGroup = new SecurityGroup(this, `${props.serviceName}-LoadBalancerSecurityGroup`, {
+    this.securityGroup = new SecurityGroup(this, `${props.env.name}-LoadBalancerSecurityGroup`, {
       vpc: vpc,
       allowAllOutbound: true,
       description: 'Access to the public facing load balancer',
       securityGroupName: this.stackName,
     });
 
-    this.loadBalancer = new HttpsAlb(this, `${props.serviceName}-LoadBalancer`, {
-      certificateArns: [ Fn.importValue(`${props.domainStackName}:ACMCertificateARN`) ],
+    this.loadBalancer = new HttpsAlb(this, `${props.env.name}-LoadBalancer`, {
+      certificateArns: [ Fn.importValue(`${props.env.domainStackName}:ACMCertificateARN`) ],
       vpc: vpc,
       internetFacing: true,
     });
 
-    this.logBucket = new Bucket(this, `${props.serviceName}-LogBucket`, {
+    this.logBucket = new Bucket(this, `${props.env.name}-LogBucket`, {
       accessControl: BucketAccessControl.LOG_DELIVERY_WRITE,
       versioned: true,
       removalPolicy: RemovalPolicy.DESTROY,
@@ -72,26 +65,26 @@ export class NiFiAppInfrastructureStack extends Stack {
       }],
     });
 
-    this.logs = new LogGroup(this, `${props.serviceName}-LogGroup`, {
+    this.logs = new LogGroup(this, `${props.env.name}-LogGroup`, {
       retention: RetentionDays.ONE_MONTH,
       logGroupName: this.stackName,
       removalPolicy: RemovalPolicy.DESTROY,
     });
 
-    this.containerCluster = new Cluster(this, `${props.serviceName}-ContainerCluster`, {
+    this.containerCluster = new Cluster(this, `${props.env.name}-ContainerCluster`, {
       vpc: vpc,
       clusterName: this.stackName,
     });
     this.privateNamespace = this.containerCluster.addDefaultCloudMapNamespace({
-      name: `${props.dnsNamespace}`,
+      name: `${props.env.domainStackName.dnsNamespace}`,
       vpc: vpc,
       type: NamespaceType.DNS_PRIVATE,
     });
 
-    this.cloudMapService = new Service(this, `${props.serviceName}-CloudMap`, {
+    this.cloudMapService = new Service(this, `${props.env.name}-CloudMap`, {
       namespace: this.privateNamespace,
-      name: `${props.serviceName}`,
-      description: `Cloud Map for ${props.serviceName}`,
+      name: `${props.env.name}`,
+      description: `Cloud Map for ${props.env.name}`,
       loadBalancer: true,
     });
   }
