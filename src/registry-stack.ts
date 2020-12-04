@@ -23,7 +23,7 @@ export class RegistryServiceStack extends Stack {
   constructor(scope: Construct, id: string, props: RegistryServiceStackProps) {
     super(scope, id, props);
 
-    const vpcId = Fn.importValue(`${props.networkStackName}:VPCID`)
+    const vpcId = Fn.importValue(`${props.env.networkStackName}:VPCID`)
     const vpc = Vpc.fromVpcAttributes(this, 'peered-network', {
       vpcId: vpcId,
       availabilityZones: [
@@ -31,16 +31,16 @@ export class RegistryServiceStack extends Stack {
         Fn.select(1, Fn.getAzs()),
       ],
       publicSubnetIds: [
-        Fn.importValue(`${props.networkStackName}:PublicSubnet1ID`),
-        Fn.importValue(`${props.networkStackName}:PublicSubnet2ID`),
+        Fn.importValue(`${props.env.networkStackName}:PublicSubnet1ID`),
+        Fn.importValue(`${props.env.networkStackName}:PublicSubnet2ID`),
       ],
       privateSubnetIds: [
-        Fn.importValue(`${props.networkStackName}:PrivateSubnet1ID`),
-        Fn.importValue(`${props.networkStackName}:PrivateSubnet2ID`),
+        Fn.importValue(`${props.env.networkStackName}:PrivateSubnet1ID`),
+        Fn.importValue(`${props.env.networkStackName}:PrivateSubnet2ID`),
       ],
     });
 
-    const task = new TaskDefinition(this, '${props.serviceName}-Registry-Task', {
+    const task = new TaskDefinition(this, '${props.env.serviceName}-Registry-Task', {
       compatibility: Compatibility.FARGATE,
       cpu: '256',
       memoryMiB: '512',

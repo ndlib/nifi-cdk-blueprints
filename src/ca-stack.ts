@@ -27,7 +27,7 @@ export class CAServiceStack extends Stack {
   constructor(scope: Construct, id: string, props: CAServiceStackProps) {
     super(scope, id, props);
 
-    const vpcId = Fn.importValue(`${props.networkStack}:VPCID`)
+    const vpcId = Fn.importValue(`${props.env.networkStack}:VPCID`)
     const vpc = Vpc.fromVpcAttributes(this, 'peered-network', {
       vpcId: vpcId,
       availabilityZones: [
@@ -35,12 +35,12 @@ export class CAServiceStack extends Stack {
         Fn.select(1, Fn.getAzs()),
       ],
       publicSubnetIds: [
-        Fn.importValue(`${props.networkStack}:PublicSubnet1ID`),
-        Fn.importValue(`${props.networkStack}:PublicSubnet2ID`),
+        Fn.importValue(`${props.env.networkStack}:PublicSubnet1ID`),
+        Fn.importValue(`${props.env.networkStack}:PublicSubnet2ID`),
       ],
       privateSubnetIds: [
-        Fn.importValue(`${props.networkStack}:PrivateSubnet1ID`),
-        Fn.importValue(`${props.networkStack}:PrivateSubnet2ID`),
+        Fn.importValue(`${props.env.networkStack}:PrivateSubnet1ID`),
+        Fn.importValue(`${props.env.networkStack}:PrivateSubnet2ID`),
       ],
     });
 
@@ -52,7 +52,7 @@ export class CAServiceStack extends Stack {
       return Secret.fromSsmParameter(parameter);
     };
 
-    const task = new TaskDefinition(this, `${props.serviceName}-CA-Task`, {
+    const task = new TaskDefinition(this, `${props.env.serviceName}-CA-Task`, {
       compatibility: Compatibility.FARGATE,
       cpu: '256',
       memoryMiB: '512',
@@ -60,12 +60,12 @@ export class CAServiceStack extends Stack {
       family: `${this.stackName}-CA-Service`,
     });
 
-    const containerImage = new DockerImageAsset(this, `${props.serviceName}-CA-Image`, {
+    const containerImage = new DockerImageAsset(this, `${props.env.serviceName}-CA-Image`, {
       directory: '',
       file: '',
     });
 
-    const container = task.addContainer(`${props.serviceName}-CA-Container`, {
+    const container = task.addContainer(`${props.env.serviceName}-CA-Container`, {
       image: ContainerImage.fromDockerImageAsset(containerImage),
       command: ['', ''],
       essential: true,
@@ -78,14 +78,14 @@ export class CAServiceStack extends Stack {
       },
     });
 
-    const appService = new FargateService(this, `${props.serviceName}-CA-Service`, {
+    const appService = new FargateService(this, `${props.env.serviceName}-CA-Service`, {
       taskDefinition: task,
-      props.infrastructureStack.containerCluster,
+      props.env.infrastructureStack.containerCluster,
       vpcSubnets: { subnetType: SubnetType.PRIVATE },
       desiredCount: 1,
     });
 
-    const targetGroup = new ApplicationTargetGroup(this, `${props.serviceName}-CA-TargetGroup`, {
+    const targetGroup = new ApplicationTargetGroup(this, `${props.env.serviceName}-CA-TargetGroup`, {
       targets: [
         task,
       ]
