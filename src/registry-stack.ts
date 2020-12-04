@@ -1,6 +1,7 @@
 import { Construct, Fn, Stack, StackProps } from '@aws-cdk/core';
 import { Cluster, Compatibility, NetworkMode, TaskDefinition } from '@aws-cdk/aws-ecs';
 import { Vpc } from '@aws-cdk/aws-ec2';
+import { CustomEnvironment } from './custom-environment';
 
 // import codebuild = require('@aws-cdk/aws-codebuild');
 // import { Artifact, Pipeline } from '@aws-cdk/aws-codepipeline';
@@ -15,11 +16,7 @@ import { Vpc } from '@aws-cdk/aws-ec2';
 // import { ArtifactBucket, HttpsAlb, SlackApproval } from '@ndlib/ndlib-cdk';
 
 export interface RegistryServiceStackProps extends StackProps {
-  readonly networkStackName: string;
-  readonly infrastructureStackName: string;
-  readonly namespace: string;
-  readonly environment: string;
-  readonly serviceName: string;
+  readonly env: CustomEnvironment;
 }
 
 export class RegistryServiceStack extends Stack {

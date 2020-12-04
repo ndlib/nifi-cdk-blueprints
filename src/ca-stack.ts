@@ -4,6 +4,7 @@ import { DockerImageAsset } from '@aws-cdk/aws-ecr-assets';
 import { Cluster, Compatibility, ContainerImage, FargateService, NetworkMode, Secret, TaskDefinition } from '@aws-cdk/aws-ecs';
 import { ApplicationTargetGroup } from '@aws-cdk/aws-elasticloadbalancingv2';
 import { StringParameter } from '@aws-cdk/aws-ssm';
+import { CustomEnvironment } from './custom-environment';
 import { FoundationStackProps } from './foundation-stack';
 
 // import codebuild = require('@aws-cdk/aws-codebuild');
@@ -19,11 +20,7 @@ import { FoundationStackProps } from './foundation-stack';
 // import { ArtifactBucket, HttpsAlb, SlackApproval } from '@ndlib/ndlib-cdk';
 
 export interface CAServiceStackProps extends StackProps {
-  readonly networkStack: string;
-  readonly infrastructureStack: string;
-  readonly namespace: string;
-  readonly environment: string;
-  readonly serviceName: string;
+  readonly env: CustomEnvironment;
 }
 
 export class CAServiceStack extends Stack {
