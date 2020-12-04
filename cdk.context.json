@@ -6,6 +6,7 @@
             "createDns": false,
             "domainName": "library.nd.edu",
             "domainStackName": "library-domain",
+            "dnsNamespace": "nifi",
             "networkStackName": "peered-network",
             "useExistingDnsZone": false,
             "slackNotifyStackname": "slack-cd-approvals-test-notifier",
@@ -17,6 +18,7 @@
             "createDns": false,
             "domainName": "library.nd.edu",
             "domainStackName": "library-domain",
+            "dnsNamespace": "nifi",
             "networkStackName": "peered-network",
             "useExistingDnsZone": false,
             "slackNotifyStackname": "nifi-approval-bot-nifi-notifier",
@@ -34,4 +36,5 @@
     "infraRepoOwner": "ndlib",
     "infraRepoName": "nifi-blueprints",
     "infraSourceBrancH": "main"
+
 }
