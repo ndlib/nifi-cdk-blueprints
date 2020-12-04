@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
 import * as cdk from '@aws-cdk/core';
-import { NiFiAppInfrastructureStack } from '../src/app-infrastructure-stack';
+import { FoundationStack } from '../src/foundation-stack';
 import * as services from './services';
 import * as pipelines from './pipelines';
 
@@ -14,4 +14,4 @@ const serviceName = app.node.tryGetContext("serviceName");
 const domainStackName = app.node.tryGetContext("domainStack");
 const dnsNamespace = app.node.tryGetContext("dnsNamespace");
 
-const service = new NiFiAppInfrastructureStack(app, 'NifiAppInfrastructure', { owner, contact, networkStackName, serviceName, domainStackName, dnsNamespace });
+const service = new FoundationStack(app, 'NifiAppInfrastructure', { owner, contact, networkStackName, serviceName, domainStackName, dnsNamespace });
