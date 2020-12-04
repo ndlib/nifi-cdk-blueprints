@@ -18,7 +18,7 @@ import { FoundationStackProps } from './foundation-stack';
 // import { Topic } from '@aws-cdk/aws-sns';
 // import { ArtifactBucket, HttpsAlb, SlackApproval } from '@ndlib/ndlib-cdk';
 
-export interface NiFiCAServiceStackProps extends StackProps {
+export interface CAServiceStackProps extends StackProps {
   readonly networkStack: string;
   readonly infrastructureStack: string;
   readonly namespace: string;
@@ -26,8 +26,8 @@ export interface NiFiCAServiceStackProps extends StackProps {
   readonly serviceName: string;
 }
 
-export class NiFiCAServiceStack extends Stack {
-  constructor(scope: Construct, id: string, props: NiFiCAServiceStackProps) {
+export class CAServiceStack extends Stack {
+  constructor(scope: Construct, id: string, props: CAServiceStackProps) {
     super(scope, id, props);
 
     const vpcId = Fn.importValue(`${props.networkStack}:VPCID`)

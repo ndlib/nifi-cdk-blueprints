@@ -14,7 +14,7 @@ import { Vpc } from '@aws-cdk/aws-ec2';
 // import { Topic } from '@aws-cdk/aws-sns';
 // import { ArtifactBucket, HttpsAlb, SlackApproval } from '@ndlib/ndlib-cdk';
 
-export interface NiFiRegistryServiceStackProps extends StackProps {
+export interface RegistryServiceStackProps extends StackProps {
   readonly networkStackName: string;
   readonly infrastructureStackName: string;
   readonly namespace: string;
@@ -22,8 +22,8 @@ export interface NiFiRegistryServiceStackProps extends StackProps {
   readonly serviceName: string;
 }
 
-export class NiFiRegistryServiceStack extends Stack {
-  constructor(scope: Construct, id: string, props: NiFiRegistryServiceStackProps) {
+export class RegistryServiceStack extends Stack {
+  constructor(scope: Construct, id: string, props: RegistryServiceStackProps) {
     super(scope, id, props);
 
     const vpcId = Fn.importValue(`${props.networkStackName}:VPCID`)
