@@ -7,6 +7,7 @@ import { LogGroup, RetentionDays } from '@aws-cdk/aws-logs';
 import { StringParameter } from '@aws-cdk/aws-ssm';
 import { CustomEnvironment } from './custom-environment';
 import { FoundationStackProps } from './foundation-stack';
+import { SharedServiceStackProps } from './shared-stack-props';
 
 // import codebuild = require('@aws-cdk/aws-codebuild');
 // import { Artifact, Pipeline } from '@aws-cdk/aws-codepipeline';
@@ -20,7 +21,7 @@ import { FoundationStackProps } from './foundation-stack';
 // import { Topic } from '@aws-cdk/aws-sns';
 // import { ArtifactBucket, HttpsAlb, SlackApproval } from '@ndlib/ndlib-cdk';
 
-export interface CAServiceStackProps extends StackProps {
+export interface CAServiceStackProps extends SharedServiceStackProps {
   readonly env: CustomEnvironment;
 }
 
@@ -85,7 +86,7 @@ export class CAServiceStack extends Stack {
 
     const appService = new FargateService(this, `${props.env.serviceName}-CA-Service`, {
       taskDefinition: task,
-      props.env.infrastructureStack.containerCluster,
+      cluster: props.foundationStack.containerCluster,
       vpcSubnets: { subnetType: SubnetType.PRIVATE },
       desiredCount: 1,
     });
