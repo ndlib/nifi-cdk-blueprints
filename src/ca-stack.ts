@@ -1,8 +1,9 @@
 import { Construct, Fn, Stack, StackProps } from '@aws-cdk/core';
 import { SubnetType, Vpc } from '@aws-cdk/aws-ec2';
 import { DockerImageAsset } from '@aws-cdk/aws-ecr-assets';
-import { Cluster, Compatibility, ContainerImage, FargateService, NetworkMode, Secret, TaskDefinition } from '@aws-cdk/aws-ecs';
+import { AwsLogDriver, Cluster, Compatibility, ContainerImage, FargateService, FargateTaskDefinition, NetworkMode, Secret, TaskDefinition } from '@aws-cdk/aws-ecs';
 import { ApplicationTargetGroup } from '@aws-cdk/aws-elasticloadbalancingv2';
+import { LogGroup, RetentionDays } from '@aws-cdk/aws-logs';
 import { StringParameter } from '@aws-cdk/aws-ssm';
 import { CustomEnvironment } from './custom-environment';
 import { FoundationStackProps } from './foundation-stack';
