@@ -45,6 +45,13 @@ export class CAServiceStack extends Stack {
       ],
     });
 
+    const logging = new AwsLogDriver({
+      streamPrefix: `${props.env.serviceName}-Task`,
+      logGroup: new LogGroup(this, `${this.stackName}`, {
+        retention: RetentionDays.ONE_WEEK,
+      }),
+    })
+
     const secretsHelper = (task: string, key: string, version = 1) => {
       const parameter = StringParameter.fromSecureStringParameterAttributes(this, `${task}${key}`, {
         parameterName: ``,
