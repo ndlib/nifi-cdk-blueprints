@@ -28,7 +28,7 @@ export class CAServiceStack extends Stack {
   constructor(scope: Construct, id: string, props: CAServiceStackProps) {
     super(scope, id, props);
 
-    const vpcId = Fn.importValue(`${props.env.networkStack}:VPCID`)
+    const vpcId = Fn.importValue(`${props.env.networkStackName}:VPCID`)
     const vpc = Vpc.fromVpcAttributes(this, 'peered-network', {
       vpcId: vpcId,
       availabilityZones: [
@@ -36,12 +36,12 @@ export class CAServiceStack extends Stack {
         Fn.select(1, Fn.getAzs()),
       ],
       publicSubnetIds: [
-        Fn.importValue(`${props.env.networkStack}:PublicSubnet1ID`),
-        Fn.importValue(`${props.env.networkStack}:PublicSubnet2ID`),
+        Fn.importValue(`${props.env.networkStackName}:PublicSubnet1ID`),
+        Fn.importValue(`${props.env.networkStackName}:PublicSubnet2ID`),
       ],
-      privateSubnetIds: [
-        Fn.importValue(`${props.env.networkStack}:PrivateSubnet1ID`),
-        Fn.importValue(`${props.env.networkStack}:PrivateSubnet2ID`),
+      privateSubnetIds: [≤
+        Fn.importValue(`${props.env.networkStackName}:PrivateSubnet1ID`),
+        Fn.importValue(`${props.env.networkStackName}:PrivateSubnet2ID`),
       ],
     });
 
