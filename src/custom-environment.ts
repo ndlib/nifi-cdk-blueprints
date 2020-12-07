@@ -8,6 +8,9 @@ export class CustomEnvironment implements Environment {
     // Name of the environment
     readonly name: string;
 
+    // Name of the service
+    readonly serviceName: string;
+
     // If true, service stacks will create Route53 recordsets for their services
     readonly createDns: boolean;
 
@@ -17,6 +20,9 @@ export class CustomEnvironment implements Environment {
     // The name of the domain stack that should be used to look up an SSL
     // Certificate
     readonly domainStackName: string;
+
+    // The namespace used by Route53 DNS
+    readonly dnsNamespace: string;
 
     // The name of the network stack that has exports for the current VPCID and
     // SubnetIDs
