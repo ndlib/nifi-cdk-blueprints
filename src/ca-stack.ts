@@ -60,22 +60,19 @@ export class CAServiceStack extends Stack {
       return Secret.fromSsmParameter(parameter);
     };
 
-    const task = new TaskDefinition(this, `${props.env.serviceName}-CA-Task`, {
-      compatibility: Compatibility.FARGATE,
-      cpu: '256',
-      memoryMiB: '512',
-      networkMode: NetworkMode.AWS_VPC,
-      family: `${this.stackName}-CA-Service`,
-    });
-
     const containerImage = new DockerImageAsset(this, `${props.env.serviceName}-CA-Image`, {
       directory: '',
       file: '',
     });
 
+    const task = new FargateTaskDefinition(this, `${props.env.serviceName}-CA-Task`, {
+      cpu: 256,
+      memoryLimitMiB: 512,
+      family: `${props.env.serviceName}-CA-Service`,
+    });
+
     const container = task.addContainer(`${props.env.serviceName}-CA-Container`, {
       image: ContainerImage.fromDockerImageAsset(containerImage),
-      command: ['', ''],
       essential: true,
       logging,
       secrets: {
@@ -94,9 +91,8 @@ export class CAServiceStack extends Stack {
     });
 
     const targetGroup = new ApplicationTargetGroup(this, `${props.env.serviceName}-CA-TargetGroup`, {
-      targets: [
-        task,
-      ]
+
     });
+    targetGroup.addTarget(targets: task);
   }
 }
