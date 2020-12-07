@@ -39,7 +39,7 @@ export class CAServiceStack extends Stack {
         Fn.importValue(`${props.env.networkStackName}:PublicSubnet1ID`),
         Fn.importValue(`${props.env.networkStackName}:PublicSubnet2ID`),
       ],
-      privateSubnetIds: [≤
+      privateSubnetIds: [
         Fn.importValue(`${props.env.networkStackName}:PrivateSubnet1ID`),
         Fn.importValue(`${props.env.networkStackName}:PrivateSubnet2ID`),
       ],
