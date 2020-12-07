@@ -94,6 +94,6 @@ export class CAServiceStack extends Stack {
     const targetGroup = new ApplicationTargetGroup(this, `${props.env.serviceName}-CA-TargetGroup`, {
 
     });
-    targetGroup.addTarget(targets: task);
+    // targetGroup.addTarget(targets: task);
   }
 }
