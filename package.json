@@ -4,6 +4,9 @@
   "bin": {
     "nifi-blueprints": "bin/nifi-blueprints.js"
   },
+  "files": [
+    "lib/**/*"
+  ],
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
