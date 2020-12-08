@@ -10,8 +10,10 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
-    "test": "jest",
-    "cdk": "cdk"
+    "test": "npm run lint && jest",
+    "cdk": "cdk",
+    "lint": "standardx '**/*.ts'",
+    "format": "standardx --fix '**/*.ts'"
   },
   "devDependencies": {
     "@aws-cdk/assert": "1.70.0",
