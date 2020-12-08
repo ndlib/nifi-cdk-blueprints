@@ -76,7 +76,7 @@ export class FoundationStack extends Stack {
       clusterName: this.stackName,
     });
     this.privateNamespace = this.containerCluster.addDefaultCloudMapNamespace({
-      name: `${props.env.domainStackName.dnsNamespace}`,
+      name: Fn.importValue(`${props.env.dnsNamespace}`),
       vpc: vpc,
       type: NamespaceType.DNS_PRIVATE,
     });
