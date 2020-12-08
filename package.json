@@ -2,7 +2,7 @@
   "name": "nifi-cdk",
   "version": "0.1.0",
   "bin": {
-    "app-infrastructure": "bin/app-infrastructure.js"
+    "nifi-blueprints": "bin/nifi-blueprints.js"
   },
   "scripts": {
     "build": "tsc",
