@@ -1,7 +1,7 @@
-import { Construct, Fn, Stack, StackProps } from '@aws-cdk/core';
-import { Cluster, Compatibility, NetworkMode, TaskDefinition } from '@aws-cdk/aws-ecs';
-import { Vpc } from '@aws-cdk/aws-ec2';
-import { CustomEnvironment } from './custom-environment';
+import { Construct, Fn, Stack, StackProps } from '@aws-cdk/core'
+import { Cluster, Compatibility, NetworkMode, TaskDefinition } from '@aws-cdk/aws-ecs'
+import { Vpc } from '@aws-cdk/aws-ec2'
+import { CustomEnvironment } from './custom-environment'
 
 // import codebuild = require('@aws-cdk/aws-codebuild');
 // import { Artifact, Pipeline } from '@aws-cdk/aws-codepipeline';
@@ -20,8 +20,8 @@ export interface RegistryServiceStackProps extends StackProps {
 }
 
 export class RegistryServiceStack extends Stack {
-  constructor(scope: Construct, id: string, props: RegistryServiceStackProps) {
-    super(scope, id, props);
+  constructor (scope: Construct, id: string, props: RegistryServiceStackProps) {
+    super(scope, id, props)
 
     const vpcId = Fn.importValue(`${props.env.networkStackName}:VPCID`)
     const vpc = Vpc.fromVpcAttributes(this, 'peered-network', {
@@ -38,7 +38,7 @@ export class RegistryServiceStack extends Stack {
         Fn.importValue(`${props.env.networkStackName}:PrivateSubnet1ID`),
         Fn.importValue(`${props.env.networkStackName}:PrivateSubnet2ID`),
       ],
-    });
+    })
 
     const task = new TaskDefinition(this, '${props.env.serviceName}-Registry-Task', {
       compatibility: Compatibility.FARGATE,
@@ -46,8 +46,6 @@ export class RegistryServiceStack extends Stack {
       memoryMiB: '512',
       networkMode: NetworkMode.AWS_VPC,
       family: `${this.stackName}-Registry-Service`,
-    });
-
-
+    })
   }
 }

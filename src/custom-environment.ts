@@ -1,56 +1,56 @@
-import { ConstructNode, Environment } from '@aws-cdk/core';
-import { getRequiredContext } from './context-helpers';
+import { ConstructNode, Environment } from '@aws-cdk/core'
+import { getRequiredContext } from './context-helpers'
 
 export class CustomEnvironment implements Environment {
-    readonly account: string;
-    readonly region: string;
+    readonly account: string
+    readonly region: string
 
     // Name of the environment
-    readonly name: string;
+    readonly name: string
 
     // Name of the service
-    readonly serviceName: string;
+    readonly serviceName: string
 
     // If true, service stacks will create Route53 recordsets for their services
-    readonly createDns: boolean;
+    readonly createDns: boolean
 
     // The base subdomain that should be used for all services
-    readonly domainName: string;
+    readonly domainName: string
 
     // The name of the domain stack that should be used to look up an SSL
     // Certificate
-    readonly domainStackName: string;
+    readonly domainStackName: string
 
     // The namespace used by Route53 DNS
-    readonly dnsNamespace: string;
+    readonly dnsNamespace: string
 
     // The name of the network stack that has exports for the current VPCID and
     // SubnetIDs
-    readonly networkStackName: string;
+    readonly networkStackName: string
 
     // If true, the app will find an existing zone by the domainName given
     // If false, the app will create one
-    readonly useExistingDnsZone: boolean;
+    readonly useExistingDnsZone: boolean
 
     // The notification stack name to which CodePipeline approvals are connected
-    readonly slackNotifyStackName: string;
+    readonly slackNotifyStackName: string
 
     // The email address to which CodePipeline status changes are sent
-    readonly notificationReceivers: string;
+    readonly notificationReceivers: string
 
     // If true, will create webhooks in CodePipeline
     // If false, will use polling in CodePipeline
-    readonly createGithubWebhooks: boolean;
+    readonly createGithubWebhooks: boolean
 
     // Email address to which SLO and other alarms are sent
-    readonly alarmsEmail: string;
+    readonly alarmsEmail: string
 
     static fromContext = (node: ConstructNode, name: string): CustomEnvironment => {
-        const contextEnv = getRequiredContext(node, 'environments')[name];
-        if (contextEnv === undefined || contextEnv === null) {
-            throw new Error(`Context key 'environments.${name}' is required.`);
-        };
-        contextEnv.name = name;
-        return contextEnv;
+      const contextEnv = getRequiredContext(node, 'environments')[name]
+      if (contextEnv === undefined || contextEnv === null) {
+        throw new Error(`Context key 'environments.${name}' is required.`)
+      }
+      contextEnv.name = name
+      return contextEnv
     }
 }
