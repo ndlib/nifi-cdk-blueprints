@@ -1,13 +1,13 @@
-import { Construct, Fn, Stack, StackProps } from '@aws-cdk/core';
-import { SubnetType, Vpc } from '@aws-cdk/aws-ec2';
-import { DockerImageAsset } from '@aws-cdk/aws-ecr-assets';
-import { AwsLogDriver, Cluster, Compatibility, ContainerImage, FargateService, FargateTaskDefinition, NetworkMode, Secret, TaskDefinition } from '@aws-cdk/aws-ecs';
-import { ApplicationTargetGroup } from '@aws-cdk/aws-elasticloadbalancingv2';
-import { LogGroup, RetentionDays } from '@aws-cdk/aws-logs';
-import { StringParameter } from '@aws-cdk/aws-ssm';
-import { CustomEnvironment } from './custom-environment';
-import { FoundationStackProps } from './foundation-stack';
-import { SharedServiceStackProps } from './shared-stack-props';
+import { Construct, Fn, Stack, StackProps } from '@aws-cdk/core'
+import { SubnetType, Vpc } from '@aws-cdk/aws-ec2'
+import { DockerImageAsset } from '@aws-cdk/aws-ecr-assets'
+import { AwsLogDriver, Cluster, Compatibility, ContainerImage, FargateService, FargateTaskDefinition, NetworkMode, Secret, TaskDefinition } from '@aws-cdk/aws-ecs'
+import { ApplicationTargetGroup } from '@aws-cdk/aws-elasticloadbalancingv2'
+import { LogGroup, RetentionDays } from '@aws-cdk/aws-logs'
+import { StringParameter } from '@aws-cdk/aws-ssm'
+import { CustomEnvironment } from './custom-environment'
+import { FoundationStackProps } from './foundation-stack'
+import { SharedServiceStackProps } from './shared-stack-props'
 
 // import codebuild = require('@aws-cdk/aws-codebuild');
 // import { Artifact, Pipeline } from '@aws-cdk/aws-codepipeline';
@@ -26,8 +26,8 @@ export interface CAServiceStackProps extends SharedServiceStackProps {
 }
 
 export class CAServiceStack extends Stack {
-  constructor(scope: Construct, id: string, props: CAServiceStackProps) {
-    super(scope, id, props);
+  constructor (scope: Construct, id: string, props: CAServiceStackProps) {
+    super(scope, id, props)
 
     const vpcId = Fn.importValue(`${props.env.networkStackName}:VPCID`)
     const vpc = Vpc.fromVpcAttributes(this, 'peered-network', {
@@ -44,7 +44,7 @@ export class CAServiceStack extends Stack {
         Fn.importValue(`${props.env.networkStackName}:PrivateSubnet1ID`),
         Fn.importValue(`${props.env.networkStackName}:PrivateSubnet2ID`),
       ],
-    });
+    })
 
     const logging = new AwsLogDriver({
       streamPrefix: `${props.env.serviceName}-Task`,
@@ -55,22 +55,22 @@ export class CAServiceStack extends Stack {
 
     const secretsHelper = (task: string, key: string, version = 1) => {
       const parameter = StringParameter.fromSecureStringParameterAttributes(this, `${task}${key}`, {
-        parameterName: ``,
+        parameterName: '',
         version: version,
-      });
-      return Secret.fromSsmParameter(parameter);
-    };
+      })
+      return Secret.fromSsmParameter(parameter)
+    }
 
     const containerImage = new DockerImageAsset(this, `${props.env.serviceName}-CA-Image`, {
       directory: '',
       file: '',
-    });
+    })
 
     const task = new FargateTaskDefinition(this, `${props.env.serviceName}-CA-Task`, {
       cpu: 256,
       memoryLimitMiB: 512,
       family: `${props.env.serviceName}-CA-Service`,
-    });
+    })
 
     const container = task.addContainer(`${props.env.serviceName}-CA-Container`, {
       image: ContainerImage.fromDockerImageAsset(containerImage),
@@ -82,18 +82,18 @@ export class CAServiceStack extends Stack {
       environment: {
 
       },
-    });
+    })
 
     const appService = new FargateService(this, `${props.env.serviceName}-CA-Service`, {
       taskDefinition: task,
       cluster: props.foundationStack.containerCluster,
       vpcSubnets: { subnetType: SubnetType.PRIVATE },
       desiredCount: 1,
-    });
+    })
 
     const targetGroup = new ApplicationTargetGroup(this, `${props.env.serviceName}-CA-TargetGroup`, {
 
-    });
+    })
     // targetGroup.addTarget(targets: task);
   }
 }
